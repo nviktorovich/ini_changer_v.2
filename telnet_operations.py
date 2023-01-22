@@ -29,5 +29,6 @@ def set_ro(ip):
     conn.sendline(ct.Commands.KTS_PASSWORD_ROOT)
     time.sleep(200 / 1000)
     conn.sendline(ct.Commands.KTS_SET_RO_MODE)
-    time.sleep(200 / 1000)
+    time.sleep(500 / 1000)
     conn.sendline(ct.Commands.REBOOT_MESS)
+    time.sleep(200 / 1000)

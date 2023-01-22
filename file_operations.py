@@ -55,9 +55,9 @@ def select_device_ip(selector, ip_main, ip_rez):
 
 def set_default():
     """
-    Функция, предназначенная для того, чтобы вернуть систему хоста в исходное состояние - без папки для примонтирования.
-    Проверяется наличие такой папки и наличие в ней файлов, что свидетельствует о том, что в ней уже что-то примонтированно.
-    Размонтируем папку, удаляем папку. Если что-то идет не так, возвращаем False
+    Функция, предназначенная для того, чтобы вернуть систему хоста в исходное состояние - без папки для
+    примонтирования. Проверяется наличие такой папки и наличие в ней файлов, что свидетельствует о том, что в ней уже
+    что-то примонтированно. Размонтируем папку, удаляем папку. Если что-то идет не так, возвращаем False
     :return: True если удалось сбросить настройки, иначе - False
     """
     full_path = os.path.join(ct.Defaults.MOUNT_FOLDER, ct.Defaults.MOUNT_DIR_NAME)
@@ -67,12 +67,13 @@ def set_default():
         list_dir = os.listdir(full_path)
         if list_dir:
             # попытка отмонтировать папку, если неудачная, возвращаем False, прекращаем работу программы
-            res = umount(full_path)
-            if not res:
+            umount_res = umount(full_path)
+            if not umount_res:
                 return False
+        else:
             # попытка удалить папку, если неудачная, возвращаем False, прекращаем работу программы
-            res = os.system(ct.Commands.REMOVE_DIR.format(full_path))
-            if res != 0:
+            remove_res = os.system(ct.Commands.REMOVE_DIR.format(full_path))
+            if remove_res != 0:
                 return False
     return True
 
