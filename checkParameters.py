@@ -3,12 +3,18 @@ import constants as ct
 import fileOperations as fo
 
 
-def input_parameter_check(parameter_list):
+def input_parameter_check(parameter_list, user):
     """
     Функция предназначенная для проверки входных параметров
     :param parameter_list: список со входными параметрами
+    :param user: uid числовое значение, необходимо для проверки, что программа запускается из-под sudo
     :return: True если входные параметры верны, иначе False
     """
+    # 0 проверка привелегий пользователя
+    if user != 0:
+        os.system(ct.Errors.WEAK_USER)
+        return False
+
     # 1 проверка длинны parameter_list, если длинна равна единице вывести сообщение о ключе -h и завершить работу
     if len(parameter_list) == 1:
         os.system(ct.Errors.FEW_INPUT_ARGUMENTS)

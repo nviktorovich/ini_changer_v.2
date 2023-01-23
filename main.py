@@ -9,7 +9,7 @@ import telnetOperations as tnet
 
 
 def main():
-    if cp.input_parameter_check(sys.argv):
+    if cp.input_parameter_check(sys.argv, os.geteuid()):
         # создание переменной active_ini_file для того, чтобы хранить в ней абсолютный путь к файлу, который надо
         # записать
         active_ini_file = os.path.join(os.getcwd(), sys.argv[2])
