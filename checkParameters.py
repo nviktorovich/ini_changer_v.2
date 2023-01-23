@@ -1,6 +1,6 @@
 import os
 import constants as ct
-import file_operations as fo
+import fileOperations as fo
 
 
 def input_parameter_check(parameter_list):

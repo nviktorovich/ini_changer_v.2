@@ -2,10 +2,10 @@ import os
 import shutil
 import sys
 import constants as ct
-import check_parameters as cp
-import file_operations as fo
-import net_operations as nop
-import telnet_operations as tnet
+import checkParameters as cp
+import fileOperations as fo
+import netOperations as nop
+import telnetOperations as tnet
 
 
 def main():
