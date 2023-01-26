@@ -8,7 +8,7 @@ import constants as ct
 import checkParameters as cp
 import fileOperations as fo
 import netOperations as nop
-import telnetOperations as tnet
+import subprocess
 
 
 def main():
@@ -26,39 +26,51 @@ def main():
                 # 2 подготавливаем систему для монтирования
                 if fo.set_default():
                     # 3 подключаемся по telnet и устанавливаем режим
-                    tnet.set_rw(ip)
-                    # 4 создаем временную папку sys в папке /media
-                    temp_path = os.path.join(ct.Defaults.MOUNT_FOLDER, ct.Defaults.MOUNT_DIR_NAME)
-                    fo.create_sys_folder(temp_path)
-                    if fo.is_exist(ct.Defaults.MOUNT_DIR_NAME, ct.Defaults.MOUNT_FOLDER):
-                        # 5 монтируем устройство
-                        fo.mount(ct.Commands.DEVICE_MNT_SYS.format(ip), temp_path)
-                        # 6 выясняем тип структуры
-                        old_ini_path = fo.get_path_to_old_ini(temp_path)
-                        # 7 проверяем наличие INI в папке, которую получили
-                        if fo.is_exist(sys.argv[2], old_ini_path):
-                            # 8 переименовываем старый INI
-                            old_ini = os.path.join(old_ini_path, sys.argv[2])
-                            os.rename(old_ini, old_ini+".{}".format(fo.get_timestamp()))
-                            # 9 копируем новый INI в рабочую директорию
-                            shutil.copy(active_ini_file, old_ini)
-                            # 10 отмонтируем устройство
-                            fo.umount(temp_path)
-                            # 11 подключаемся по telnet и устанавливаем режим
-                            tnet.set_ro(ip)
-                            if fo.set_default():
-                                os.system(ct.Messages.OK_MESS.format(sys.argv[2], ip))
-                                send_exit_and_close()
+                    t_conn = subprocess.check_output([ct.Defaults.PATH_TO_EXECUTABLE_FILE, ct.Defaults.RW, ip],
+                                                     universal_newlines=True)
+
+                    if t_conn:
+                        # 4 создаем временную папку sys в папке /media
+                        temp_path = os.path.join(ct.Defaults.MOUNT_FOLDER, ct.Defaults.MOUNT_DIR_NAME)
+                        fo.create_sys_folder(temp_path)
+                        if fo.is_exist(ct.Defaults.MOUNT_DIR_NAME, ct.Defaults.MOUNT_FOLDER):
+                            # 5 монтируем устройство
+                            fo.mount(ct.Commands.DEVICE_MNT_SYS.format(ip), temp_path)
+                            # 6 выясняем тип структуры
+                            old_ini_path = fo.get_path_to_old_ini(temp_path)
+                            # 7 проверяем наличие INI в папке, которую получили
+                            if fo.is_exist(sys.argv[2], old_ini_path):
+                                # 8 переименовываем старый INI
+                                old_ini = os.path.join(old_ini_path, sys.argv[2])
+                                os.rename(old_ini, old_ini+".{}".format(fo.get_timestamp()))
+                                # 9 копируем новый INI в рабочую директорию
+                                shutil.copy(active_ini_file, old_ini)
+                                # 10 отмонтируем устройство
+                                fo.umount(temp_path)
+                                # 11 подключаемся по telnet и устанавливаем режим
+                                t_conn = subprocess.check_output(
+                                    [ct.Defaults.PATH_TO_EXECUTABLE_FILE, ct.Defaults.RO, ip],
+                                    universal_newlines=True)
+                                if t_conn:
+                                    if fo.set_default():
+                                        os.system(ct.Messages.OK_MESS.format(sys.argv[2], ip))
+                                        send_exit_and_close()
+                                    else:
+                                        os.system(ct.Errors.FINAL_ERR)
+                                        os.system(ct.Errors.NO_SET_DEFAULT.format(temp_path))
+                                        send_exit_and_close()
+                                else:
+                                    os.system(ct.Errors.TNET_FAIL)
+                                    send_exit_and_close()
                             else:
-                                os.system(ct.Errors.FINAL_ERR)
-                                os.system(ct.Errors.NO_SET_DEFAULT.format(temp_path))
+                                os.system(ct.Errors.NO_EXIST_INI.format(sys.argv[2], old_ini_path))
                                 send_exit_and_close()
                         else:
-                            os.system(ct.Errors.NO_EXIST_INI.format(sys.argv[2], old_ini_path))
+                            os.system(ct.Errors.NO_EXIST_TMP_FOLDER.format(ct.Defaults.MOUNT_DIR_NAME,
+                                                                           ct.Defaults.MOUNT_FOLDER))
                             send_exit_and_close()
                     else:
-                        os.system(ct.Errors.NO_EXIST_TMP_FOLDER.format(ct.Defaults.MOUNT_DIR_NAME,
-                                                                       ct.Defaults.MOUNT_FOLDER))
+                        os.system(ct.Errors.TNET_FAIL)
                         send_exit_and_close()
                 else:
                     os.system(ct.Errors.NO_SET_DEFAULT.format(os.path.join(

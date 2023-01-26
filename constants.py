@@ -4,15 +4,6 @@ class Commands:
     MOUNT_COMMAND = "mount {} {}"
     UMOUNT_COMMAND = "umount -f {}"
     REMOVE_DIR = "rm -r {}"
-    TELNET_CONN = "telnet {}"
-    KTS_LOGIN_REQUEST = "login"
-    KTS_USER_NAME = "root"
-    KTS_PASSWORD_REQUEST = "Password"
-    KTS_PASSWORD_ROOT = "crtc"
-    KTS_SET_RW_MODE = "mount -o rw,remount /mnt/sys"
-    KTS_SET_RO_MODE = "mount -o ro,remount /mnt/sys"
-    EXIT_MESS = "exit"
-    REBOOT_MESS = "reboot"
 
 
 class Errors:
@@ -27,6 +18,7 @@ class Errors:
     NO_EXIST_TMP_FOLDER = "echo ошибка работы с файловой системой хоста. Не удалось создать папку {} в директории {}"
     NO_EXIST_INI = "echo ошибка работы с файловой системой МПК. Не удалось обнаружить файл {} в директории {}"
     FINAL_ERR = "echo после успешного проведения всех операций возникла ошибка с восстановлением исходного состояния"
+    TNET_FAIL = "echo ошибка установки режима. Модуль telnet_driver вернул ошибку."
 
 
 class Messages:
@@ -49,4 +41,7 @@ class Defaults:
     PROJECT_CONF_PATTERN = "PROJECT_DIR"
     PROJECT_CONF_PATTERN_RE = "(^PROJECT_DIR=\/mnt\/sys\/)(\S*)"
     DATE_PATTERN = "%Y-%m-%d %H:%M "
+    PATH_TO_EXECUTABLE_FILE = "/bin/ktschange-files/telnet_driver"
+    RO = "ro"
+    RW = "rw"
 
