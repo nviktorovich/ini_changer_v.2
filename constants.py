@@ -40,7 +40,7 @@ class Defaults:
     PROJECT_CONF = "project.conf"
     PROJECT_CONF_PATTERN = "PROJECT_DIR"
     PROJECT_CONF_PATTERN_RE = "(^PROJECT_DIR=\/mnt\/sys\/)(\S*)"
-    DATE_PATTERN = "%Y-%m-%d %H:%M "
+    DATE_PATTERN = "%Y-%m-%d_%H:%M "
     PATH_TO_EXECUTABLE_FILE = "/bin/ktschange-files/telnet_driver"
     RO = "ro"
     RW = "rw"
